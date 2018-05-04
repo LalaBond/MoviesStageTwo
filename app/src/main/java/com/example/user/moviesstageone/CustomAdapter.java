@@ -10,12 +10,13 @@ import java.util.List;
  * Created by Lassarie Rosa on 5/4/2018.
  */
 
-public class CustomAdapter extends BaseAdapter{
+public class CustomAdapter extends BaseAdapter {
 
-
+    /*Private Fields*/
+    private List<MoviesResponse> movies;
 
     public CustomAdapter(List<MoviesResponse> movies) {
-
+        this.movies = movies;
 
     }
 
