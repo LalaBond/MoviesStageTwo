@@ -17,7 +17,6 @@ public class CustomAdapter extends BaseAdapter {
 
     public CustomAdapter(List<MoviesResponse> movies) {
         this.movies = movies;
-
     }
 
     @Override
