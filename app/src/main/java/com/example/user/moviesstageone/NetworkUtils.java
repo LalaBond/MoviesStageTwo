@@ -18,7 +18,7 @@ public final class NetworkUtils {
 
 
     public static String getResponseFromHttpUrl (URL url) throws IOException {
-//        URL api = new URL("https://api.themoviedb.org/3/movie/popular?api_key=d2321f470253a298739307f4629a1a57");
+//        URL api = new URL("https://api.themoviedb.org/3/movie/popular?api_key=d2321f470253a298739307f4629a1a57/");
 
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 

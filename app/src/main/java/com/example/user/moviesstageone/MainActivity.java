@@ -1,23 +1,18 @@
 package com.example.user.moviesstageone;
 
-import android.app.DownloadManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.user.moviesstageone.model.MoviesResponse;
+import com.example.user.moviesstageone.network.RetrofitClient;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,8 +24,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        DataService service = null;
 
-        MovieSyncData.startImmediateSync(this);
+            try {
+                service = RetrofitClient.getRetrofitInstance().create(DataService.class);
+                Call<List<MoviesResponse>> call = service.getAllMovies();
+                call.enqueue(new Callback<List<MoviesResponse>>() {
+
+
+                    public void onResponse(Call<List<MoviesResponse>> call, Response<List<MoviesResponse>> response) {
+
+
+                        System.out.println("RESPONSE: " + response.body());
+                    }
+
+                    public void onFailure(Call<List<MoviesResponse>> call, Throwable t) {
+                        System.out.println("ERROR IN RESPONSE: " + t.getMessage());
+
+                    }
+                });
+            }catch (Exception e ){
+
+                System.out.println("LALA ERROR: " + e);
+            }
+
+
+
+        //MovieSyncData.startImmediateSync(this);
 //        try {
 //            URL api = new URL("https://api.themoviedb.org/3/movie/popular?api_key=d2321f470253a298739307f4629a1a57");
 //
