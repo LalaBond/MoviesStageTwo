@@ -28,17 +28,18 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 service = RetrofitClient.getRetrofitInstance().create(DataService.class);
-                Call<List<MoviesResponse>> call = service.getAllMovies();
-                call.enqueue(new Callback<List<MoviesResponse>>() {
+                Call<MoviesResponse> call = service.getAllMovies();
+
+                call.enqueue(new Callback<MoviesResponse>() {
 
 
-                    public void onResponse(Call<List<MoviesResponse>> call, Response<List<MoviesResponse>> response) {
-
+                    public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
 
                         System.out.println("RESPONSE: " + response.body());
+                        System.out.println("RESPONSE to string: " + response.toString());
                     }
 
-                    public void onFailure(Call<List<MoviesResponse>> call, Throwable t) {
+                    public void onFailure(Call<MoviesResponse> call, Throwable t) {
                         System.out.println("ERROR IN RESPONSE: " + t.getMessage());
 
                     }

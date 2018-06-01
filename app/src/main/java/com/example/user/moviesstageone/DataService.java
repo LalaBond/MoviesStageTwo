@@ -15,5 +15,5 @@ public interface DataService {
 
     //@GET("3/movie/popular?api_key=d2321f470253a298739307f4629a1a57")
     @GET("3/movie/popular?api_key=d2321f470253a298739307f4629a1a57")
-    Call<List<MoviesResponse>> getAllMovies();
+    Call<MoviesResponse> getAllMovies();
 }
