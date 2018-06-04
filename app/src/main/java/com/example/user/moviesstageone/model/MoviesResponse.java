@@ -1,10 +1,9 @@
 package com.example.user.moviesstageone.model;
 
-import com.example.user.moviesstageone.Movies;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.List;
+
 
 /**
  * Created by Lassarie Rosa on 5/4/2018.

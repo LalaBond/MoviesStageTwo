@@ -13,7 +13,7 @@ import retrofit2.http.GET;
 
 public interface DataService {
 
-    //@GET("3/movie/popular?api_key=d2321f470253a298739307f4629a1a57")
-    @GET("3/movie/popular?api_key=d2321f470253a298739307f4629a1a57")
+
+    @GET("3/movie/popular?api_key=")
     Call<MoviesResponse> getAllMovies();
 }
