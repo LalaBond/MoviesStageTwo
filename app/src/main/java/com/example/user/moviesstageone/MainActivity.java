@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
                 call.enqueue(new Callback<MoviesResponse>() {
 
-
                     public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
 
                         System.out.println("RESPONSE: " + response.body());
