@@ -25,10 +25,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DataService service = null;
-
             try {
-                service = RetrofitClient.getRetrofitInstance().create(DataService.class);
+                DataService service = RetrofitClient.getRetrofitInstance().create(DataService.class);
                 Call<MoviesResponse> call = service.getAllMovies();
 
                 call.enqueue(new Callback<MoviesResponse>() {
