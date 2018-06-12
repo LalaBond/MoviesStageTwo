@@ -5,11 +5,15 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
+    android:id="@+id/layout"
     android:background="#434549">
 
     <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="150dp" />
+        android:layout_height="200dp"
+        android:id="@+id/image"
+        android:scaleType="centerCrop"/>
+
 
     <TextView
         android:id="@+id/releaseDateTextView"
@@ -18,34 +22,44 @@
         android:text="2018"
         android:textColor="#ffffff"
         android:padding="10dp"/>
+
     <TextView
         android:id="@+id/movieTitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:textColor="#ffffff"
         android:textSize="20sp"
+        android:textStyle="bold"
         tools:text="James Bond"
-        android:layout_marginLeft="10dp"/>
+        android:padding="5dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/voteAverage"
         android:textColor="#ffffff"
+        android:layout_marginLeft="10dp"
+        android:padding="5dp"
         tools:text="Rating: (8.5/10)"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:text="Description: "
         android:textColor="#ffffff"
-        android:layout_marginLeft="10dp"/>
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:padding="5dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/descriptionTextView"
         android:textColor="#ffffff"
-        android:layout_marginLeft="10dp"/>
+        android:textSize="16sp"
+        android:padding="15dp"
+        />
 
 
 

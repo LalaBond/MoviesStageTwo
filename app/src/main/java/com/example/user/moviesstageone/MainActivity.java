@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import com.example.user.moviesstageone.model.MoviesResponse;
 import com.example.user.moviesstageone.network.RetrofitClient;
@@ -40,23 +42,30 @@ public class MainActivity extends AppCompatActivity {
 
                     public void onFailure(Call<MoviesResponse> call, Throwable t) {
                         System.out.println("ERROR IN RESPONSE: " + t.getMessage());
-
                     }
                 });
             }catch (Exception e ){
 
                 System.out.println("LALA ERROR: " + e);
             }
-
     }
 
     private void createAdapter(MoviesResponse body) {
 
         RecyclerView recyclerView = findViewById(R.id.moviePosterRecyclerView);
 
-        CustomAdapter adapter = new CustomAdapter(this, body);
+        MoviesCustomAdapter adapter = new MoviesCustomAdapter(this, body);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+
+       // MenuInflater inflater = getMenuInflater();
+       // inflater.inflate(R.menu.sort_menu, menu);
+        //return true;
     }
 }
