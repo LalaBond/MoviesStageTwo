@@ -15,5 +15,8 @@ public interface DataService {
 
 
     @GET("3/movie/popular?api_key=")
-    Call<MoviesResponse> getAllMovies();
+    Call<MoviesResponse> getPopularMovies();
+
+    @GET("3/movie/top_rated?api_key=")
+    Call<MoviesResponse> getTopRatedMovies();
 }

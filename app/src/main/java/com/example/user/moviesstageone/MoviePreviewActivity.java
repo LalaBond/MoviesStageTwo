@@ -3,11 +3,8 @@ package com.example.user.moviesstageone;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.user.moviesstageone.model.Movies;
@@ -26,7 +23,7 @@ public class MoviePreviewActivity extends AppCompatActivity {
     private String posterPath = "http://image.tmdb.org/t/p/w780/";
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movie_preview);
 
