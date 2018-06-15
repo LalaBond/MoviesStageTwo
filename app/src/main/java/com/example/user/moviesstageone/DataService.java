@@ -13,7 +13,6 @@ import retrofit2.http.GET;
 
 public interface DataService {
 
-
     @GET("3/movie/popular?api_key=")
     Call<MoviesResponse> getPopularMovies();
 
