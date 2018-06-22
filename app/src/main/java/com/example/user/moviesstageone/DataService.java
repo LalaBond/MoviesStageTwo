@@ -1,5 +1,6 @@
 package com.example.user.moviesstageone;
 
+import com.example.user.moviesstageone.model.MovieReviewsResponse;
 import com.example.user.moviesstageone.model.MoviesResponse;
 
 import java.util.List;
@@ -18,4 +19,7 @@ public interface DataService {
 
     @GET("3/movie/top_rated?api_key=")
     Call<MoviesResponse> getTopRatedMovies();
+
+    @GET("3/movie/reviews/{movie_id}?api_key=")
+    Call<MovieReviewsResponse> getMovieReviews();
 }
