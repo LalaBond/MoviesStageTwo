@@ -1,11 +1,18 @@
 package com.example.user.moviesstageone;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.user.moviesstageone.model.MovieReviewsResponse;
+import com.example.user.moviesstageone.model.Reviews;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by someone on 6/20/18.
@@ -14,9 +21,16 @@ import com.example.user.moviesstageone.model.MovieReviewsResponse;
 public class CustomReviewsAdapter extends RecyclerView.Adapter<CustomReviewsAdapter.ViewHolder> {
 
 
-    public CustomReviewsAdapter(MovieReviewsResponse body) {
+    private List<Reviews> movieReviewsList;
+    //private MovieReviewsResponse movieResponse;
+    private Context context;
 
+    public CustomReviewsAdapter(Context context, MovieReviewsResponse movieReviews) {
 
+        this.context = context;
+        //movieResponse = movieReviews;
+        movieReviewsList = new ArrayList<>(Arrays.asList(movieReviews.getResults()));
+        System.out.println(movieReviewsList);
     }
 
     @Override
@@ -31,18 +45,25 @@ public class CustomReviewsAdapter extends RecyclerView.Adapter<CustomReviewsAdap
     @Override
     public void onBindViewHolder(CustomReviewsAdapter.ViewHolder holder, int position) {
 
+        holder.authorTextView.setText(movieReviewsList.get(position).getAuthor());
+        holder.descriptionTextView.setText(movieReviewsList.get(position).getContent());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return movieReviewsList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
+        TextView authorTextView, descriptionTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
+
+            authorTextView = itemView.findViewById(R.id.authorTextView);
+            descriptionTextView = itemView.findViewById(R.id.descriptionTextView);
+
         }
     }
 }

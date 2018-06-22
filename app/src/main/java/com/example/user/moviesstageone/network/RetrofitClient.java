@@ -11,7 +11,7 @@ public class RetrofitClient {
 
     private static Retrofit retrofit;
 
-    private static String BASE_URL = "https://api.themoviedb.org/";
+    private static String BASE_URL = "https://api.themoviedb.org/3/movie/";
 
     public static Retrofit getRetrofitInstance() {
         if (retrofit == null) {

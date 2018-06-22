@@ -56,8 +56,8 @@ public class MoviePreviewActivity extends AppCompatActivity {
 
     }
 
-    public void showReviews(){
-
+    public void showReviews(View view)
+    {
                 Intent intent = new Intent(this, ReviewsActivity.class);
                 intent.putExtra("movieId", movie.getId());
                 startActivity(intent);

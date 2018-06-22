@@ -24,18 +24,19 @@ public class ReviewsActivity extends AppCompatActivity {
         int movieId = (int) intent.getSerializableExtra("movieId");
 
         DataService service = RetrofitClient.getRetrofitInstance().create(DataService.class);
+
         Call<MovieReviewsResponse> call = service.getMovieReviews();
 
         APICall(call);
 
     }
 
-    private void createAdapter(MovieReviewsResponse body) {
+    private void createAdapter(MovieReviewsResponse response) {
 
         RecyclerView reviewsRecyclerView = findViewById(R.id.reviewsRecyclerView);
 
         LinearLayoutManager linearLayout = new LinearLayoutManager(this);
-        CustomReviewsAdapter reviewsAdapter = new CustomReviewsAdapter(body);
+        CustomReviewsAdapter reviewsAdapter = new CustomReviewsAdapter(this, response);
 
         reviewsRecyclerView.setLayoutManager(linearLayout);
         reviewsRecyclerView.setAdapter(reviewsAdapter);
