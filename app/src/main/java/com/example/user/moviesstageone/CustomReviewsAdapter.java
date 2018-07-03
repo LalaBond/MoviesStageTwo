@@ -62,7 +62,7 @@ public class CustomReviewsAdapter extends RecyclerView.Adapter<CustomReviewsAdap
             super(itemView);
 
             authorTextView = itemView.findViewById(R.id.authorTextView);
-            descriptionTextView = itemView.findViewById(R.id.descriptionTextView);
+            descriptionTextView = itemView.findViewById(R.id.reviewTextView);
 
         }
     }
