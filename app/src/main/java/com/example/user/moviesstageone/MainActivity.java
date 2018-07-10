@@ -1,11 +1,16 @@
 package com.example.user.moviesstageone;
 
+import android.annotation.SuppressLint;
+import android.app.LoaderManager;
+import android.content.AsyncTaskLoader;
+import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,8 +26,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<Cursor>{
 
+    private static final int TASK_LOADER_ID = 0;
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +41,12 @@ public class MainActivity extends AppCompatActivity {
         Call<MoviesResponse> call = service.getPopularMovies();
 
         APICall(call);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     /*Method to call api service and get data*/
@@ -93,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
             case (R.id.favorites):
                 Cursor queryResults = getFavorites();
+                //getSupportLoaderManager().initLoader(TASK_LOADER_ID, null, null);
 
             default:
                 call = service.getPopularMovies();
@@ -105,31 +120,80 @@ public class MainActivity extends AppCompatActivity {
 
     private Cursor getFavorites() {
 
-//        MovieDbHelper dbHelper = new MovieDbHelper(this);
-//        SQLiteDatabase database = dbHelper.getWritableDatabase();
-//
-//
-//        Cursor cursor =  database.query(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null);
-//
-//        MoviesResponse response = new MoviesResponse();
-//        Movies movie = new Movies();
-//
-//
-//        for (int i = 0; i < cursor.getCount(); i++)
-//        {
-//
-//            //response.setResults(movie.setId(cursor.getColumnIndex()););
-//
-//        }
-//        cursor.getCount();
-//        return cursor;
-        return null;
+         try {
+            /*fetching data from db and returning*/
+            Cursor x = getContentResolver().query(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI, null, null, null, null);
+
+            return x;
+
+         } catch (Exception e) {
+
+                    Log.e(TAG, "Failed to load data.");
+                    System.out.println("$lala: " + e);
+                    e.printStackTrace();
+                    return null;
+         }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+
+        return new AsyncTaskLoader<Cursor>(this) {
+
+            // Initialize a Cursor, this will hold all the task data
+            Cursor mTaskData = null;
+
+            // onStartLoading() is called when a loader first starts loading data
+            @Override
+            protected void onStartLoading() {
+                if (mTaskData != null) {
+                    // Delivers any previously loaded data immediately
+                    deliverResult(mTaskData);
+                } else {
+                    // Force a new load
+                    forceLoad();
+                }
+            }
+
+            // loadInBackground() performs asynchronous loading of data
+            @Override
+            public Cursor loadInBackground() {
+                // Will implement to load data
+
+                // Query and load all task data in the background; sort by priority
+                // [Hint] use a try/catch block to catch any errors in loading data
+
+                try {
+            /*fetching data from db and returning*/
+                    return getContentResolver().query(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI,
+                            null, null, null, null);
+
+                } catch (Exception e) {
+                    System.out.println("$lala: " + e);
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            // deliverResult sends the result of the load, a Cursor, to the registered listener
+            public void deliverResult(Cursor data) {
+                mTaskData = data;
+                super.deliverResult(data);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
     }
-}
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+
+    }
+

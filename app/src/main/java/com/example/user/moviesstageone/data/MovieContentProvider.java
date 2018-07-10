@@ -49,10 +49,26 @@ public class MovieContentProvider extends ContentProvider {
     }
 
 
-    @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
-        return null;
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+
+        /*Reading data from database*/
+        final SQLiteDatabase database = dbHelper.getReadableDatabase();
+        int match = sUriMatcher.match(uri);
+
+        Cursor cursor;
+        switch (match){
+            case FAVORITE_MOVIES:
+                cursor = database.query(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown  uri: " + uri);
+        }
+
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+        return cursor;
     }
 
     @Nullable
