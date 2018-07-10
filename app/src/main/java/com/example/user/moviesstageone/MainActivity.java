@@ -135,64 +135,64 @@ public class MainActivity extends AppCompatActivity implements
          }
     }
 
-    @SuppressLint("StaticFieldLeak")
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-
-        return new AsyncTaskLoader<Cursor>(this) {
-
-            // Initialize a Cursor, this will hold all the task data
-            Cursor mTaskData = null;
-
-            // onStartLoading() is called when a loader first starts loading data
-            @Override
-            protected void onStartLoading() {
-                if (mTaskData != null) {
-                    // Delivers any previously loaded data immediately
-                    deliverResult(mTaskData);
-                } else {
-                    // Force a new load
-                    forceLoad();
-                }
-            }
-
-            // loadInBackground() performs asynchronous loading of data
-            @Override
-            public Cursor loadInBackground() {
-                // Will implement to load data
-
-                // Query and load all task data in the background; sort by priority
-                // [Hint] use a try/catch block to catch any errors in loading data
-
-                try {
-            /*fetching data from db and returning*/
-                    return getContentResolver().query(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI,
-                            null, null, null, null);
-
-                } catch (Exception e) {
-                    System.out.println("$lala: " + e);
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-
-            // deliverResult sends the result of the load, a Cursor, to the registered listener
-            public void deliverResult(Cursor data) {
-                mTaskData = data;
-                super.deliverResult(data);
-            }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
+//    @SuppressLint("StaticFieldLeak")
+//    @Override
+//    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+//
+//        return new AsyncTaskLoader<Cursor>(this) {
+//
+//            // Initialize a Cursor, this will hold all the task data
+//            Cursor mTaskData = null;
+//
+//            // onStartLoading() is called when a loader first starts loading data
+//            @Override
+//            protected void onStartLoading() {
+//                if (mTaskData != null) {
+//                    // Delivers any previously loaded data immediately
+//                    deliverResult(mTaskData);
+//                } else {
+//                    // Force a new load
+//                    forceLoad();
+//                }
+//            }
+//
+//            // loadInBackground() performs asynchronous loading of data
+//            @Override
+//            public Cursor loadInBackground() {
+//                // Will implement to load data
+//
+//                // Query and load all task data in the background; sort by priority
+//                // [Hint] use a try/catch block to catch any errors in loading data
+//
+//                try {
+//            /*fetching data from db and returning*/
+//                    return getContentResolver().query(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI,
+//                            null, null, null, null);
+//
+//                } catch (Exception e) {
+//                    System.out.println("$lala: " + e);
+//                    e.printStackTrace();
+//                    return null;
+//                }
+//            }
+//
+//            // deliverResult sends the result of the load, a Cursor, to the registered listener
+//            public void deliverResult(Cursor data) {
+//                mTaskData = data;
+//                super.deliverResult(data);
+//            }
+//        };
+//    }
+//
+//    @Override
+//    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+//
+//    }
+//
+//    @Override
+//    public void onLoaderReset(Loader<Cursor> loader) {
+//
+//    }
 
 
     }
