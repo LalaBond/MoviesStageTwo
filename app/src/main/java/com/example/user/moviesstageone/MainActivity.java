@@ -105,30 +105,31 @@ public class MainActivity extends AppCompatActivity {
 
     private Cursor getFavorites() {
 
-        MovieDbHelper dbHelper = new MovieDbHelper(this);
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
-
-
-        Cursor cursor =  database.query(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
-
-        MoviesResponse response = new MoviesResponse();
-        Movies movie = new Movies();
-
-
-        for (int i = 0; i < cursor.getCount(); i++)
-        {
-
-            //response.setResults(movie.setId(cursor.getColumnIndex()););
-
-        }
-        cursor.getCount();
-        return cursor;
+//        MovieDbHelper dbHelper = new MovieDbHelper(this);
+//        SQLiteDatabase database = dbHelper.getWritableDatabase();
+//
+//
+//        Cursor cursor =  database.query(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME,
+//                null,
+//                null,
+//                null,
+//                null,
+//                null,
+//                null);
+//
+//        MoviesResponse response = new MoviesResponse();
+//        Movies movie = new Movies();
+//
+//
+//        for (int i = 0; i < cursor.getCount(); i++)
+//        {
+//
+//            //response.setResults(movie.setId(cursor.getColumnIndex()););
+//
+//        }
+//        cursor.getCount();
+//        return cursor;
+        return null;
 
     }
 }

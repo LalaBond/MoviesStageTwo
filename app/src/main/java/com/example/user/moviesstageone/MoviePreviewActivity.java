@@ -70,7 +70,6 @@ public class MoviePreviewActivity extends AppCompatActivity {
         voteAverage.setText(Double.toString(movie.getVote_average()) + "/10");
         descriptionTextView.setText(movie.getOverview());
 
-
     }
 
 
@@ -81,6 +80,10 @@ public class MoviePreviewActivity extends AppCompatActivity {
 
             values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, movie.getId() );
             values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE, movie.getTitle());
+            values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_DATE, movie.getRelease_date());
+            values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RATING, movie.getVote_average());
+            values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_DESCRIPTION, movie.getOverview());
+            values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_POSTER, movie.getPoster_path());
 
             /*Inserting data using the content provider*/
             Uri uri = getContentResolver().insert(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI, values);

@@ -18,7 +18,6 @@ public class FavoriteMoviesContract {
     /*Base columns generate automatically the id column*/
     public static final class FavoriteMoviesEntry implements BaseColumns {
 
-
         /*Building Uri.  Final Uri should be
         content://com.example.user.moviesstageone/favorite_movies*/
         public static final Uri CONTENT_URI =
@@ -28,6 +27,10 @@ public class FavoriteMoviesContract {
         public static final String TABLE_NAME = "favorite_movies";
         public static final String COLUMN_MOVIE_ID = "movie_id";
         public static final String COLUMN_MOVIE_TITLE = "movie_title";
+        public static final String COLUMN_MOVIE_DATE = "movie_date";
+        public static final String COLUMN_MOVIE_RATING = "movie_rating";
+        public static final String COLUMN_MOVIE_DESCRIPTION = "movie_description";
+        public static final String COLUMN_MOVIE_POSTER = "movie_poster";
 
     }
 }
