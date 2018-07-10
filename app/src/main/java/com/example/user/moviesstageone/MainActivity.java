@@ -26,8 +26,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor>{
+public class MainActivity extends AppCompatActivity {
 
     private static final int TASK_LOADER_ID = 0;
     private static final String TAG = MainActivity.class.getSimpleName();
