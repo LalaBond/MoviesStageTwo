@@ -12,6 +12,6 @@ public class MovieTrailerResponse {
     private int movieId;
 
     @SerializedName("results")
-    private Trailer [] results;
+    public Trailer [] results;
 
 }

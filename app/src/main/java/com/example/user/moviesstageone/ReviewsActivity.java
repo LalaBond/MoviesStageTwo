@@ -5,7 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
+
+import com.example.user.moviesstageone.adapters.CustomReviewsAdapter;
 import com.example.user.moviesstageone.model.MovieReviewsResponse;
+import com.example.user.moviesstageone.network.DataService;
 import com.example.user.moviesstageone.network.RetrofitClient;
 
 import retrofit2.Call;
@@ -25,7 +30,7 @@ public class ReviewsActivity extends AppCompatActivity {
 
         DataService service = RetrofitClient.getRetrofitInstance().create(DataService.class);
 
-        Call<MovieReviewsResponse> call = service.getMovieReviews();
+        Call<MovieReviewsResponse> call = service.getMovieReviews(String.valueOf(movieId));
 
         APICall(call);
 
@@ -34,12 +39,20 @@ public class ReviewsActivity extends AppCompatActivity {
     private void createAdapter(MovieReviewsResponse response) {
 
         RecyclerView reviewsRecyclerView = findViewById(R.id.reviewsRecyclerView);
-
+        TextView emptyTextView = findViewById(R.id.empty);
         LinearLayoutManager linearLayout = new LinearLayoutManager(this);
-        CustomReviewsAdapter reviewsAdapter = new CustomReviewsAdapter(this, response);
 
-        reviewsRecyclerView.setLayoutManager(linearLayout);
-        reviewsRecyclerView.setAdapter(reviewsAdapter);
+        if(response.getResults().length == 0){
+
+            reviewsRecyclerView.setVisibility(View.GONE);
+            emptyTextView.setVisibility(View.VISIBLE);
+
+        }
+        else {
+            CustomReviewsAdapter reviewsAdapter = new CustomReviewsAdapter(this, response);
+            reviewsRecyclerView.setLayoutManager(linearLayout);
+            reviewsRecyclerView.setAdapter(reviewsAdapter);
+        }
     }
 
 

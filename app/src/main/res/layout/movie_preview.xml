@@ -40,6 +40,14 @@
             android:textColor="#57aff2"
             android:layout_gravity="right"
             android:onClick="showReviews"/>
+
+        <ImageButton
+            android:layout_width="49dp"
+            android:layout_height="match_parent"
+            android:id="@+id/likeButton"
+            android:src="@drawable/like"
+            android:clickable="true"
+            android:onClick="favoriteMovie"/>
     </LinearLayout>
 
     <TextView
@@ -93,6 +101,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/trailersRecyclerView"/>
+
+
 
 </LinearLayout>
 </ScrollView>

@@ -1,4 +1,4 @@
-package com.example.user.moviesstageone;
+package com.example.user.moviesstageone.network;
 
 import com.example.user.moviesstageone.model.MovieReviewsResponse;
 import com.example.user.moviesstageone.model.MovieTrailerResponse;
@@ -20,8 +20,8 @@ public interface DataService {
     @GET("top_rated?api_key=")
     Call<MoviesResponse> getTopRatedMovies();
 
-    @GET("278/reviews?api_key=")
-    Call<MovieReviewsResponse> getMovieReviews();
+    @GET("{movie_id}/reviews?api_key=")
+    Call<MovieReviewsResponse> getMovieReviews(@Path("movie_id") String movie_id);
 
     @GET("{movie_id}/videos?api_key=")
     Call<MovieTrailerResponse> getMovieTrailer(@Path("movie_id") String movie_id);

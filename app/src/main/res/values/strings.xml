@@ -2,6 +2,7 @@
     <string name="app_name">Movies Stage One</string>
     <string name="most_popular">Most Popular</string>
     <string name="highest_rated">Highest Rated</string>
+    <string name="favorites">Favorites</string>
     <string name="description">Description:</string>
     <string name="trailers">Trailers:</string>
 </resources>

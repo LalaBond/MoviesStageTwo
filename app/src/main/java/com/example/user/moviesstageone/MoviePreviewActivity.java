@@ -1,24 +1,23 @@
 package com.example.user.moviesstageone;
 
 
+import android.content.ContentValues;
 import android.content.Intent;
-import android.database.DataSetObserver;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.user.moviesstageone.adapters.TrailerListAdapter;
+import com.example.user.moviesstageone.data.FavoriteMoviesContract;
+import com.example.user.moviesstageone.data.MovieDbHelper;
 import com.example.user.moviesstageone.model.MovieTrailerResponse;
 import com.example.user.moviesstageone.model.Movies;
-import com.example.user.moviesstageone.model.MoviesResponse;
+import com.example.user.moviesstageone.network.DataService;
 import com.example.user.moviesstageone.network.RetrofitClient;
 import com.squareup.picasso.Picasso;
 
@@ -34,6 +33,7 @@ public class MoviePreviewActivity extends AppCompatActivity {
 
     private String posterPath = "http://image.tmdb.org/t/p/w780/";
     private Movies movie;
+    private SQLiteDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +42,16 @@ public class MoviePreviewActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
+        MovieDbHelper dbHelper = new MovieDbHelper(this);
+        database = dbHelper.getWritableDatabase();
+
         movie = (Movies) intent.getSerializableExtra("movies");
 
         ImageView image = findViewById(R.id.image);
         TextView releaseDateTextView = findViewById(R.id.releaseDateTextView);
         TextView movieTitleTextView = findViewById(R.id.movieTitleTextView);
         TextView voteAverage = findViewById(R.id.voteAverage);
-        TextView descriptionTextView = findViewById(R.id.descriptionTextView);Button reviewsButton = findViewById(R.id.reviewsButton);
+        TextView descriptionTextView = findViewById(R.id.descriptionTextView);
 
         /*Calling service in order to get movie trailers*/
         DataService service = RetrofitClient.getRetrofitInstance().create(DataService.class);
@@ -65,7 +68,25 @@ public class MoviePreviewActivity extends AppCompatActivity {
         voteAverage.setText(Double.toString(movie.getVote_average()) + "/10");
         descriptionTextView.setText(movie.getOverview());
 
-        //Intent webIntent = new Intent(Intent.ACTION_VIEW, trailerWebpage);
+
+    }
+
+
+    public void favoriteMovie (View view)
+    {
+        try {
+            ContentValues values = new ContentValues();
+
+            values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, movie.getId() );
+            values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE, movie.getTitle());
+
+            long id = database.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, values);
+
+        } catch(Exception e) {
+
+            System.out.println("$LALA: " + e);
+        }
+
     }
 
     public void showReviews(View view)
@@ -103,12 +124,11 @@ public class MoviePreviewActivity extends AppCompatActivity {
          /*getting movie trailers and displaying them in the recycler view*/
 
         RecyclerView trailerRecyclerView = findViewById(R.id.trailersRecyclerView);
-        TrailerListAdapter adapter = new TrailerListAdapter(body);
+        TrailerListAdapter adapter = new TrailerListAdapter(this, body);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
         trailerRecyclerView.setLayoutManager(layoutManager);
         trailerRecyclerView.setAdapter(adapter);
-
 
     }
 

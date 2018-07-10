@@ -1,4 +1,4 @@
-package com.example.user.moviesstageone;
+package com.example.user.moviesstageone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.example.user.moviesstageone.MoviePreviewActivity;
+import com.example.user.moviesstageone.R;
 import com.example.user.moviesstageone.model.Movies;
 import com.example.user.moviesstageone.model.MoviesResponse;
 import com.squareup.picasso.Picasso;

@@ -1,4 +1,4 @@
-package com.example.user.moviesstageone;
+package com.example.user.moviesstageone.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.user.moviesstageone.R;
 import com.example.user.moviesstageone.model.MovieReviewsResponse;
 import com.example.user.moviesstageone.model.Reviews;
 
@@ -28,7 +29,6 @@ public class CustomReviewsAdapter extends RecyclerView.Adapter<CustomReviewsAdap
     public CustomReviewsAdapter(Context context, MovieReviewsResponse movieReviews) {
 
         this.context = context;
-        //movieResponse = movieReviews;
         movieReviewsList = new ArrayList<>(Arrays.asList(movieReviews.getResults()));
         System.out.println(movieReviewsList);
     }
