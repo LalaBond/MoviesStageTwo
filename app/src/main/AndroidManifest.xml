@@ -20,6 +20,10 @@
         </activity>
         <activity android:name=".MoviePreviewActivity" />
         <activity android:name=".ReviewsActivity"></activity>
+        <provider
+            android:authorities="com.example.user.moviesstageone"
+            android:name="com.example.user.moviesstageone.data.MovieContentProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

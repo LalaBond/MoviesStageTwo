@@ -4,6 +4,7 @@ package com.example.user.moviesstageone;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.user.moviesstageone.adapters.TrailerListAdapter;
 import com.example.user.moviesstageone.data.FavoriteMoviesContract;
+import com.example.user.moviesstageone.data.MovieContentProvider;
 import com.example.user.moviesstageone.data.MovieDbHelper;
 import com.example.user.moviesstageone.model.MovieTrailerResponse;
 import com.example.user.moviesstageone.model.Movies;
@@ -80,7 +82,9 @@ public class MoviePreviewActivity extends AppCompatActivity {
             values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, movie.getId() );
             values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE, movie.getTitle());
 
-            long id = database.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, values);
+            /*Inserting data using the content provider*/
+            Uri uri = getContentResolver().insert(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI, values);
+            //long id = database.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, values);
 
         } catch(Exception e) {
 
