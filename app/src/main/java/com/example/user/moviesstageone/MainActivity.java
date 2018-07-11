@@ -1,11 +1,7 @@
 package com.example.user.moviesstageone;
 
-import android.annotation.SuppressLint;
-import android.app.LoaderManager;
-import android.content.AsyncTaskLoader;
-import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Movie;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,10 +10,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
 import com.example.user.moviesstageone.adapters.MoviesCustomAdapter;
 import com.example.user.moviesstageone.data.FavoriteMoviesContract;
-import com.example.user.moviesstageone.data.MovieDbHelper;
 import com.example.user.moviesstageone.model.Movies;
 import com.example.user.moviesstageone.model.MoviesResponse;
 import com.example.user.moviesstageone.network.DataService;
@@ -28,7 +22,6 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int TASK_LOADER_ID = 0;
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -98,23 +91,60 @@ public class MainActivity extends AppCompatActivity {
 
             case (R.id.mostPopular):
                 call = service.getPopularMovies();
+                APICall(call);
                 break;
 
             case (R.id.highestRated):
                 call = service.getTopRatedMovies();
+                APICall(call);
                 break;
 
             case (R.id.favorites):
                 Cursor queryResults = getFavorites();
-                //getSupportLoaderManager().initLoader(TASK_LOADER_ID, null, null);
+                parseToMovieObject(queryResults);
+                break;
 
             default:
                 call = service.getPopularMovies();
+                APICall(call);
                 break;
         }
-        APICall(call);
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void parseToMovieObject(Cursor queryResults) {
+
+        int movieIndex = queryResults.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID);
+        int movieTitle = queryResults.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE);
+        int movieDate = queryResults.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_DATE);
+        int movieRating = queryResults.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RATING);
+        int movieDescription = queryResults.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_DESCRIPTION);
+        int moviePoster = queryResults.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_POSTER);
+
+        int results = queryResults.getCount();
+
+        MoviesResponse movieResponse = new MoviesResponse();
+        Movies [] movieModel = new Movies[results];
+
+        /*parsing elements of the database to a Movie Response model */
+        for (int i = 0; i < results; i++){
+            queryResults.moveToPosition(i);
+
+            /*get from db and set values of data to model*/
+            movieModel[i].setId(queryResults.getInt(movieIndex));
+            movieModel[i].setTitle(queryResults.getString(movieTitle));
+            movieModel[i].setRelease_date(queryResults.getString(movieDate));
+            movieModel[i].setVote_average(Double.parseDouble(queryResults.getString(movieRating)));
+            movieModel[i].setOverview(queryResults.getString(movieDescription));
+            movieModel[i].setPoster_path(queryResults.getString(moviePoster));
+
+            movieResponse.setResults(movieModel);
+        }
+
+        /*Creating adapter for favorite movies*/
+        createAdapter(movieResponse);
+
     }
 
     private Cursor getFavorites() {
@@ -126,73 +156,11 @@ public class MainActivity extends AppCompatActivity {
             return x;
 
          } catch (Exception e) {
-
-                    Log.e(TAG, "Failed to load data.");
-                    System.out.println("$lala: " + e);
-                    e.printStackTrace();
-                    return null;
+             Log.e(TAG, "Failed to load data.");
+             e.printStackTrace();
+             return null;
          }
     }
 
-//    @SuppressLint("StaticFieldLeak")
-//    @Override
-//    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-//
-//        return new AsyncTaskLoader<Cursor>(this) {
-//
-//            // Initialize a Cursor, this will hold all the task data
-//            Cursor mTaskData = null;
-//
-//            // onStartLoading() is called when a loader first starts loading data
-//            @Override
-//            protected void onStartLoading() {
-//                if (mTaskData != null) {
-//                    // Delivers any previously loaded data immediately
-//                    deliverResult(mTaskData);
-//                } else {
-//                    // Force a new load
-//                    forceLoad();
-//                }
-//            }
-//
-//            // loadInBackground() performs asynchronous loading of data
-//            @Override
-//            public Cursor loadInBackground() {
-//                // Will implement to load data
-//
-//                // Query and load all task data in the background; sort by priority
-//                // [Hint] use a try/catch block to catch any errors in loading data
-//
-//                try {
-//            /*fetching data from db and returning*/
-//                    return getContentResolver().query(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI,
-//                            null, null, null, null);
-//
-//                } catch (Exception e) {
-//                    System.out.println("$lala: " + e);
-//                    e.printStackTrace();
-//                    return null;
-//                }
-//            }
-//
-//            // deliverResult sends the result of the load, a Cursor, to the registered listener
-//            public void deliverResult(Cursor data) {
-//                mTaskData = data;
-//                super.deliverResult(data);
-//            }
-//        };
-//    }
-//
-//    @Override
-//    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-//
-//    }
-//
-//    @Override
-//    public void onLoaderReset(Loader<Cursor> loader) {
-//
-//    }
-
-
-    }
+}
 
