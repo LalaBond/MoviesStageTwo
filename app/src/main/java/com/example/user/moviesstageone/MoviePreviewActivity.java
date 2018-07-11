@@ -10,8 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.user.moviesstageone.adapters.TrailerListAdapter;
 import com.example.user.moviesstageone.data.FavoriteMoviesContract;
@@ -35,7 +37,6 @@ public class MoviePreviewActivity extends AppCompatActivity {
 
     private String posterPath = "http://image.tmdb.org/t/p/w780/";
     private Movies movie;
-    private SQLiteDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +44,6 @@ public class MoviePreviewActivity extends AppCompatActivity {
         setContentView(R.layout.movie_preview);
 
         Intent intent = getIntent();
-
-        MovieDbHelper dbHelper = new MovieDbHelper(this);
-        database = dbHelper.getWritableDatabase();
 
         movie = (Movies) intent.getSerializableExtra("movies");
 
@@ -59,7 +57,6 @@ public class MoviePreviewActivity extends AppCompatActivity {
         DataService service = RetrofitClient.getRetrofitInstance().create(DataService.class);
         Call<MovieTrailerResponse> call = service.getMovieTrailer(String.valueOf(movie.getId()));
         APICall(call);
-
 
         String posterS1 = movie.getPoster_path();
         String posterPath1 = posterPath.concat(posterS1);
@@ -85,9 +82,15 @@ public class MoviePreviewActivity extends AppCompatActivity {
             values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_DESCRIPTION, movie.getOverview());
             values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_POSTER, movie.getPoster_path());
 
+
             /*Inserting data using the content provider*/
             Uri uri = getContentResolver().insert(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI, values);
-            //long id = database.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, values);
+
+            Toast toast = Toast.makeText(this, movie.getTitle() + " has been added to favorites", Toast.LENGTH_LONG);
+            toast.show();
+
+            ImageButton likeButton = findViewById(R.id.likeButton);
+            likeButton.setImageResource(R.drawable.like);
 
         } catch(Exception e) {
 

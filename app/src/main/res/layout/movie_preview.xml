@@ -45,7 +45,8 @@
             android:layout_width="49dp"
             android:layout_height="match_parent"
             android:id="@+id/likeButton"
-            android:src="@drawable/like"
+            android:src="@drawable/unlike"
+            android:background="@android:color/transparent"
             android:clickable="true"
             android:onClick="favoriteMovie"/>
     </LinearLayout>

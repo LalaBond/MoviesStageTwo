@@ -101,7 +101,9 @@ public class MainActivity extends AppCompatActivity {
 
             case (R.id.favorites):
                 Cursor queryResults = getFavorites();
-                parseToMovieObject(queryResults);
+                if(queryResults.getCount() > 0){
+                    parseToMovieObject(queryResults);
+                }
                 break;
 
             default:
@@ -132,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
             queryResults.moveToPosition(i);
 
             /*get from db and set values of data to model*/
+            movieModel[i] = new Movies();
             movieModel[i].setId(queryResults.getInt(movieIndex));
             movieModel[i].setTitle(queryResults.getString(movieTitle));
             movieModel[i].setRelease_date(queryResults.getString(movieDate));
