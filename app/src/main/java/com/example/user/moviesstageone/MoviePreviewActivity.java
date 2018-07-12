@@ -3,6 +3,7 @@ package com.example.user.moviesstageone;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,6 +38,8 @@ public class MoviePreviewActivity extends AppCompatActivity {
 
     private String posterPath = "http://image.tmdb.org/t/p/w780/";
     private Movies movie;
+    private ImageButton likeButton;
+    private boolean isFavorite = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,7 @@ public class MoviePreviewActivity extends AppCompatActivity {
         TextView movieTitleTextView = findViewById(R.id.movieTitleTextView);
         TextView voteAverage = findViewById(R.id.voteAverage);
         TextView descriptionTextView = findViewById(R.id.descriptionTextView);
+        likeButton = findViewById(R.id.likeButton);
 
         /*Calling service in order to get movie trailers*/
         DataService service = RetrofitClient.getRetrofitInstance().create(DataService.class);
@@ -67,30 +71,63 @@ public class MoviePreviewActivity extends AppCompatActivity {
         voteAverage.setText(Double.toString(movie.getVote_average()) + "/10");
         descriptionTextView.setText(movie.getOverview());
 
+
+        /*Verify if movie is a favorite. O(n) needs improvement*/
+        Cursor queryResults = getContentResolver().query(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI, null, null, null, null);
+
+        int movieIndex = queryResults.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID);
+        int results = queryResults.getCount();
+
+        for (int i = 0; i < results; i++){
+
+            queryResults.moveToPosition(i);
+            if (movie.getId() == queryResults.getInt(movieIndex)){
+                //movie is a favorite
+
+                likeButton.setImageResource(R.drawable.like);
+                isFavorite = true;
+            }
+        }
+
     }
 
 
     public void favoriteMovie (View view)
     {
         try {
-            ContentValues values = new ContentValues();
 
-            values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, movie.getId() );
-            values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE, movie.getTitle());
-            values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_DATE, movie.getRelease_date());
-            values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RATING, movie.getVote_average());
-            values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_DESCRIPTION, movie.getOverview());
-            values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_POSTER, movie.getPoster_path());
+            if(isFavorite){
+
+                //delete row
+                int rowsDeleted = getContentResolver().delete(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI, String.valueOf(movie.getId()), null);
+
+                Toast toast = Toast.makeText(this, movie.getTitle() + " has been deleted from favorites", Toast.LENGTH_LONG);
+                toast.show();
+
+                likeButton.setImageResource(R.drawable.unlike);
+                isFavorite = false;
+
+            }
+            else {
+                ContentValues values = new ContentValues();
+
+                values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, movie.getId());
+                values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE, movie.getTitle());
+                values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_DATE, movie.getRelease_date());
+                values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RATING, movie.getVote_average());
+                values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_DESCRIPTION, movie.getOverview());
+                values.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_POSTER, movie.getPoster_path());
 
 
             /*Inserting data using the content provider*/
-            Uri uri = getContentResolver().insert(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI, values);
+                Uri uri = getContentResolver().insert(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI, values);
 
-            Toast toast = Toast.makeText(this, movie.getTitle() + " has been added to favorites", Toast.LENGTH_LONG);
-            toast.show();
+                Toast toast = Toast.makeText(this, movie.getTitle() + " has been added to favorites", Toast.LENGTH_LONG);
+                toast.show();
 
-            ImageButton likeButton = findViewById(R.id.likeButton);
-            likeButton.setImageResource(R.drawable.like);
+                likeButton.setImageResource(R.drawable.like);
+                isFavorite = true;
+            }
 
         } catch(Exception e) {
 
