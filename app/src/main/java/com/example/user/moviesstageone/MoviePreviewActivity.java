@@ -97,9 +97,11 @@ public class MoviePreviewActivity extends AppCompatActivity {
         try {
 
             if(isFavorite){
+                Uri uri = FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI;
+                uri = uri.buildUpon().appendPath(String.valueOf(movie.getId())).build();
 
                 //delete row
-                int rowsDeleted = getContentResolver().delete(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI, String.valueOf(movie.getId()), null);
+                int rowsDeleted = getContentResolver().delete(uri, null, null);
 
                 Toast toast = Toast.makeText(this, movie.getTitle() + " has been deleted from favorites", Toast.LENGTH_LONG);
                 toast.show();

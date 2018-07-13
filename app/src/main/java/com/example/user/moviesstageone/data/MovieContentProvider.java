@@ -21,6 +21,7 @@ public class MovieContentProvider extends ContentProvider {
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     public static final int FAVORITE_MOVIES = 100;
+    public static final int FAVORITE_MOVIE_ID = 101;
 
 
     public static UriMatcher buildUriMatcher(){
@@ -32,7 +33,7 @@ public class MovieContentProvider extends ContentProvider {
     uriMatcher.addURI(FavoriteMoviesContract.AUTHORITY, FavoriteMoviesContract.PATH_FAVORITE_MOVIES, 100);
 
     /*Uri to get a single item*/
-        uriMatcher.addURI(FavoriteMoviesContract.AUTHORITY, FavoriteMoviesContract.PATH_FAVORITE_MOVIES + "/#", 101);
+        uriMatcher.addURI(FavoriteMoviesContract.AUTHORITY, FavoriteMoviesContract.PATH_FAVORITE_MOVIES + "/#", FAVORITE_MOVIE_ID);
 
         return uriMatcher;
     }
@@ -108,7 +109,7 @@ public class MovieContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, String selection, @Nullable String[] strings) {
+    public int delete(@NonNull Uri uri, String selection, @Nullable String[] selectionArgs) {
 
         final SQLiteDatabase database = dbHelper.getWritableDatabase();
 
@@ -117,10 +118,12 @@ public class MovieContentProvider extends ContentProvider {
         /*match the uri received */
         int match = sUriMatcher.match(uri);
         switch (match){
-            case FAVORITE_MOVIES:
+            case FAVORITE_MOVIE_ID:
+
+                String id = uri.getPathSegments().get(1);
 
                 /*delete new row of data. If delete was'nt successful it will return -1*/
-                rowsDeleted = database.delete(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, selection, null);
+                rowsDeleted = database.delete(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID + "=?", new String [] {id});
 
                 break;
             default:
