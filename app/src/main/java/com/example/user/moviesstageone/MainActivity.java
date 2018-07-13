@@ -22,22 +22,68 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static int position = 0;
+    private static RecyclerView recyclerView;
+    private static GridLayoutManager layoutManager;
+    private static String itemSeleted = "POPULAR_MOVIES";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        recyclerView = findViewById(R.id.moviePosterRecyclerView);
+        layoutManager = new GridLayoutManager(this, 2);
         DataService service = RetrofitClient.getRetrofitInstance().create(DataService.class);
-        Call<MoviesResponse> call = service.getPopularMovies();
+        Call<MoviesResponse> call = service.getPopularMovies();;
 
-        APICall(call);
+        if(savedInstanceState != null){
+
+            position =  savedInstanceState.getInt("position");
+            itemSeleted = savedInstanceState.getString("itemSelected");
+
+            switch (itemSeleted){
+
+                case "POPULAR_MOVIES":
+                    call = service.getPopularMovies();
+                    APICall(call);
+                    break;
+                case "HIGHEST_RATED":
+                    call = service.getTopRatedMovies();
+                    APICall(call);
+                    break;
+                case "FAVORITES":
+                    Cursor queryResults = getFavorites();
+                    if(queryResults.getCount() > 0){
+                        parseToMovieObject(queryResults);
+                    }
+                    break;
+                default:
+                    call = service.getPopularMovies();
+                    APICall(call);
+                    break;
+
+            }
+
+            layoutManager.scrollToPosition(position);
+
+        }else {
+
+            APICall(call);
+        }
+
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        //layoutManager = new GridLayoutManager(this, 2);
+        position = layoutManager.findFirstVisibleItemPosition();
+
+        outState.putInt("position", position);
+        outState.putString("itemSelected", itemSeleted);
     }
 
     /*Method to call api service and get data*/
@@ -65,10 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void createAdapter(MoviesResponse body) {
 
-        RecyclerView recyclerView = findViewById(R.id.moviePosterRecyclerView);
-
         MoviesCustomAdapter adapter = new MoviesCustomAdapter(this, body);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
@@ -90,17 +133,20 @@ public class MainActivity extends AppCompatActivity {
 
             case (R.id.mostPopular):
                 call = service.getPopularMovies();
+                itemSeleted = "POPULAR_MOVIES";
                 APICall(call);
                 break;
 
             case (R.id.highestRated):
                 call = service.getTopRatedMovies();
+                itemSeleted = "HIGHEST_RATED";
                 APICall(call);
                 break;
 
             case (R.id.favorites):
                 Cursor queryResults = getFavorites();
                 if(queryResults.getCount() > 0){
+                    itemSeleted = "FAVORITES";
                     parseToMovieObject(queryResults);
                 }
                 break;
