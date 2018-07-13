@@ -74,6 +74,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        /*Updating favorite list when we hit back button*/
+        if(itemSeleted.equals("FAVORITES")){
+
+            Cursor queryResults = getFavorites();
+            if(queryResults.getCount() > 0){
+                parseToMovieObject(queryResults);
+            }
+        }
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
