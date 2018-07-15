@@ -1,6 +1,7 @@
 package com.example.user.moviesstageone;
 
 import android.database.Cursor;
+import android.graphics.Movie;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,6 +10,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
 import com.example.user.moviesstageone.adapters.MoviesCustomAdapter;
 import com.example.user.moviesstageone.data.FavoriteMoviesContract;
 import com.example.user.moviesstageone.model.Movies;
@@ -26,12 +30,15 @@ public class MainActivity extends AppCompatActivity {
     private static RecyclerView recyclerView;
     private static GridLayoutManager layoutManager;
     private static String itemSeleted = "POPULAR_MOVIES";
+    private static int totalResults = 0;
+    private TextView empty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        empty = findViewById(R.id.empty);
         recyclerView = findViewById(R.id.moviePosterRecyclerView);
         layoutManager = new GridLayoutManager(this, 2);
         DataService service = RetrofitClient.getRetrofitInstance().create(DataService.class);
@@ -54,8 +61,12 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case "FAVORITES":
                     Cursor queryResults = getFavorites();
-                    if(queryResults.getCount() > 0){
+                    if(totalResults > 0){
                         parseToMovieObject(queryResults);
+                    }
+                    else{
+                        recyclerView.setVisibility(View.GONE);
+                        empty.setVisibility(View.VISIBLE);
                     }
                     break;
                 default:
@@ -82,8 +93,13 @@ public class MainActivity extends AppCompatActivity {
         if(itemSeleted.equals("FAVORITES")){
 
             Cursor queryResults = getFavorites();
-            if(queryResults.getCount() > 0){
+            totalResults = queryResults.getCount();
+            if(totalResults > 0){
                 parseToMovieObject(queryResults);
+            }
+            else{
+                    recyclerView.setVisibility(View.GONE);
+                    empty.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -109,6 +125,10 @@ public class MainActivity extends AppCompatActivity {
                 public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
 
                     createAdapter(response.body());
+                    if(recyclerView.getVisibility() == View.GONE){
+                        recyclerView.setVisibility(View.VISIBLE);
+                        empty.setVisibility(View.GONE);
+                    }
                 }
 
                 public void onFailure(Call<MoviesResponse> call, Throwable t) {
@@ -159,8 +179,15 @@ public class MainActivity extends AppCompatActivity {
             case (R.id.favorites):
                 Cursor queryResults = getFavorites();
                 if(queryResults.getCount() > 0){
+
                     itemSeleted = "FAVORITES";
                     parseToMovieObject(queryResults);
+
+                }else{
+
+                    recyclerView.setVisibility(View.GONE);
+                    empty.setVisibility(View.VISIBLE);
+
                 }
                 break;
 
@@ -188,20 +215,21 @@ public class MainActivity extends AppCompatActivity {
         Movies [] movieModel = new Movies[results];
 
         /*parsing elements of the database to a Movie Response model */
-        for (int i = 0; i < results; i++){
-            queryResults.moveToPosition(i);
+            for (int i = 0; i < results; i++) {
+                queryResults.moveToPosition(i);
 
             /*get from db and set values of data to model*/
-            movieModel[i] = new Movies();
-            movieModel[i].setId(queryResults.getInt(movieIndex));
-            movieModel[i].setTitle(queryResults.getString(movieTitle));
-            movieModel[i].setRelease_date(queryResults.getString(movieDate));
-            movieModel[i].setVote_average(Double.parseDouble(queryResults.getString(movieRating)));
-            movieModel[i].setOverview(queryResults.getString(movieDescription));
-            movieModel[i].setPoster_path(queryResults.getString(moviePoster));
+                movieModel[i] = new Movies();
+                movieModel[i].setId(queryResults.getInt(movieIndex));
+                movieModel[i].setTitle(queryResults.getString(movieTitle));
+                movieModel[i].setRelease_date(queryResults.getString(movieDate));
+                movieModel[i].setVote_average(Double.parseDouble(queryResults.getString(movieRating)));
+                movieModel[i].setOverview(queryResults.getString(movieDescription));
+                movieModel[i].setPoster_path(queryResults.getString(moviePoster));
 
-            movieResponse.setResults(movieModel);
-        }
+                movieResponse.setResults(movieModel);
+            }
+
 
         /*Creating adapter for favorite movies*/
         createAdapter(movieResponse);
