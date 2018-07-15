@@ -32,10 +32,6 @@ public class MoviesCustomAdapter extends RecyclerView.Adapter<MoviesCustomAdapte
 
     public MoviesCustomAdapter(Context context, MoviesResponse movies) {
 
-        if(movies.getResults() == null) {
-            movies.setResults(new Movies[0]);
-        }
-
         this.context = context;
         moviesResponse = movies;
         movieList = new ArrayList<>(Arrays.asList(movies.getResults()));
